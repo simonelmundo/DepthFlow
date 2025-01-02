@@ -48,6 +48,11 @@ from DepthFlow.State import DepthState
 @define
 class DepthScene(ShaderScene):
     __name__: str = "DepthScene"
+    
+    def __init__(self, *args, **kwargs):
+        # Ensure headless backend is used
+        kwargs['backend'] = "headless"
+        super().__init__(*args, **kwargs)
 
     # Constants
     DEFAULT_IMAGE: str = "https://w.wallhaven.cc/full/pk/wallhaven-pkz5r9.png"
