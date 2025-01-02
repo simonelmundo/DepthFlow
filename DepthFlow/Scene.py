@@ -249,14 +249,32 @@ class DepthScene(ShaderScene):
         depth = LoadImage(depth) or self.estimator.estimate(image)
 
         # Match rendering resolution to image
-        self.resolution   = (image.width,image.height)
+        self.resolution = (image.width, image.height)
         self.aspect_ratio = (image.width/image.height)
+        
+        # Handle numpy arrays in image and depth
+        def safe_assign(value):
+            if isinstance(value, numpy.ndarray):
+                return float(value.item()) if value.size == 1 else float(value[0])
+            return float(value)
+
+        # Update state values safely
+        if hasattr(self, 'state'):
+            for item in self.animation:
+                state = item.get('state', None)
+                if state is not None:
+                    try:
+                        if len(state) > 1:
+                            self.state.origin_x = safe_assign(state[1])
+                    except (TypeError, IndexError):
+                        continue
+
         self.image.from_image(image)
         self.depth.from_image(depth)
 
         # Default to 1920x1080 on base image
         if (self._image is self.DEFAULT_IMAGE):
-            self.resolution   = (1920, 1080)
+            self.resolution = (1920, 1080)
             self.aspect_ratio = (16/9)
 
     def export_name(self, path: Path) -> Path:
