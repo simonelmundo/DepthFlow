@@ -1,5 +1,13 @@
+import os
 import DepthFlow.Resources as DepthFlowResources
 from Broken import BrokenProject, __version__
+
+# Add GPU acceleration environment setup
+os.environ["PYOPENGL_PLATFORM"] = "egl"
+os.environ["__EGL_VENDOR_LIBRARY_FILENAMES"] = "/usr/share/glvnd/egl_vendor.d/10_nvidia.json"
+os.environ["NVIDIA_VISIBLE_DEVICES"] = "all"
+os.environ["NVIDIA_DRIVER_CAPABILITIES"] = "all"
+os.environ["WINDOW_BACKEND"] = "headless"
 
 __version__ = __version__
 
